@@ -71,3 +71,11 @@
 **Why it fits:** It prevents accidental duplicate bookings and keeps the demo lifecycle easy to reason about.
 
 **Switch later when:** The product explicitly supports scheduled/future rides; then enforce one active immediate ride while allowing separately scheduled requests.
+
+## ADR-009: Queue candidate pools, but allow one accepted/in-progress pool per vehicle
+
+**Pick:** Bullet may accumulate several REQUESTED candidate pools, but Jashim can have only one MATCHED/DRIVER_ARRIVED/STARTED pool at a time.
+
+**Why it fits:** Incompatible passenger requests can still queue while the vehicle is online, without pretending one vehicle can simultaneously serve two active trips.
+
+**Switch later when:** A fleet/matching service assigns requests across many drivers and rebalances queued work dynamically.
