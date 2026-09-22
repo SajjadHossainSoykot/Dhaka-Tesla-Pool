@@ -6,7 +6,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { apiFetch } from "@/lib/api";
 import { getSession } from "@/lib/session";
-import type { DriverPool, RideStatus } from "@/lib/types";
+import type { DriverPool, RideStatus, Session } from "@/lib/types";
 
 function money(value: number) { return `৳${(value / 100).toFixed(2)}`; }
 function pretty(value: string) { return value.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()); }
@@ -20,7 +20,7 @@ const ACTIONS: Partial<Record<RideStatus, { action: "ACCEPT" | "ARRIVE" | "START
 
 export default function DriverPage() {
   const router = useRouter();
-  const session = typeof window === "undefined" ? null : getSession();
+  const [session, setSession] = useState<Session | null>(null);
   const [vehicle, setVehicle] = useState<{ id: string; name: string; capacity: number; isOnline: boolean } | null>(null);
   const [pools, setPools] = useState<DriverPool[]>([]);
   const [message, setMessage] = useState("");
@@ -36,7 +36,9 @@ export default function DriverPage() {
   }, []);
 
   useEffect(() => {
-    if (!session || session.user.role !== "DRIVER") { router.replace("/login"); return; }
+    const current = getSession();
+    if (!current || current.user.role !== "DRIVER") { router.replace("/login"); return; }
+    setSession(current);
     void load().catch((err) => setMessage(err.message));
     const timer = window.setInterval(() => void load().catch(() => undefined), 3000);
     return () => window.clearInterval(timer);

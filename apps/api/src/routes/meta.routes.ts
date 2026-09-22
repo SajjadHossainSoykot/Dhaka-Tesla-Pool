@@ -9,7 +9,10 @@ const FareSchema = z.object({
   pickupZone: z.enum(ZONES),
   destinationZone: z.enum(ZONES),
   seats: z.coerce.number().int().min(1).max(3).default(1),
-  pooled: z.coerce.boolean().default(false),
+  pooled: z
+    .enum(["true", "false"])
+    .transform((value) => value === "true")
+    .default("false"),
 });
 
 router.get("/zones", (_req, res) => {

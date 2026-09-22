@@ -6,7 +6,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { apiFetch } from "@/lib/api";
 import { getSession } from "@/lib/session";
-import type { PassengerRide, Zone } from "@/lib/types";
+import type { PassengerRide, Session, Zone } from "@/lib/types";
 
 const ACTIVE = new Set(["REQUESTED", "MATCHED", "DRIVER_ARRIVED", "STARTED"]);
 const CANCELLABLE = new Set(["REQUESTED", "MATCHED", "DRIVER_ARRIVED"]);
@@ -16,7 +16,7 @@ function prettyZone(value: string) { return value.replaceAll("_", " ").replace(/
 
 export default function PassengerPage() {
   const router = useRouter();
-  const session = typeof window === "undefined" ? null : getSession();
+  const [session, setSession] = useState<Session | null>(null);
   const [zones, setZones] = useState<Zone[]>([]);
   const [rides, setRides] = useState<PassengerRide[]>([]);
   const [pickupZone, setPickupZone] = useState("BANANI");
@@ -37,10 +37,12 @@ export default function PassengerPage() {
   }, []);
 
   useEffect(() => {
-    if (!session || session.user.role !== "PASSENGER") {
+    const current = getSession();
+    if (!current || current.user.role !== "PASSENGER") {
       router.replace("/login");
       return;
     }
+    setSession(current);
     void load().catch((err) => setMessage(err.message));
     const timer = window.setInterval(() => void load().catch(() => undefined), 3500);
     return () => window.clearInterval(timer);
