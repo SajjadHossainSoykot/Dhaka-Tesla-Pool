@@ -325,7 +325,9 @@ AI was used openly as an engineering assistant, consistent with the challenge po
 - **Changed suggestion:** the initial auth-client direction was tightened from persistent browser storage to `sessionStorage`, with the production limitation documented rather than presenting demo JWT storage as production-ready security
 - **Rejected complexity:** Redis, Kafka/queues, Kubernetes, and microservices were intentionally kept out of the MVP because the current problem does not justify them
 
-**Ownership note:** before submitting, I reviewed the generated/assisted code and can explain, modify, and debug the schema, auth, fare model, pooling algorithm, concurrency control, lifecycle, tests, and deployment choices.
+**Ownership note:** before submission, I will locally run, review, test, and deploy the generated/assisted implementation and make sure I can explain, modify, and debug the schema, auth, fare model, pooling algorithm, concurrency control, lifecycle, tests, and deployment choices.
+
+Development workflow and commit-timeline context: [`docs/DEVELOPMENT_PROCESS.md`](docs/DEVELOPMENT_PROCESS.md).
 
 ## Video and submission
 
