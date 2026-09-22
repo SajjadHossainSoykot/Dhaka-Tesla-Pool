@@ -55,3 +55,11 @@
 **Alternatives:** `SELECT ... FOR UPDATE`, serializable transactions with retries, advisory locks.
 
 **Switch later when:** Matching spans shards/regions or reservations need expirations, at which point an idempotent reservation workflow and stronger coordination strategy may be needed.
+
+## ADR-007: Short-lived JWT bearer token for the internship demo
+
+**Pick:** 2-hour signed JWT returned after login; the web client keeps it in `sessionStorage`, not persistent storage.
+
+**Why it fits:** It keeps the API independently testable and makes role authorization explicit without introducing a session store.
+
+**Trade-off:** Browser-accessible token storage is still exposed to XSS. For a production consumer app, use secure HTTP-only cookies, refresh-token rotation, CSRF protection where applicable, device/session revocation, and stronger account security.
