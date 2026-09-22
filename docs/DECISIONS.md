@@ -63,3 +63,11 @@
 **Why it fits:** It keeps the API independently testable and makes role authorization explicit without introducing a session store.
 
 **Trade-off:** Browser-accessible token storage is still exposed to XSS. For a production consumer app, use secure HTTP-only cookies, refresh-token rotation, CSRF protection where applicable, device/session revocation, and stronger account security.
+
+## ADR-008: One active ride per passenger
+
+**Pick:** a passenger may have only one ride in REQUESTED/MATCHED/DRIVER_ARRIVED/STARTED at a time.
+
+**Why it fits:** It prevents accidental duplicate bookings and keeps the demo lifecycle easy to reason about.
+
+**Switch later when:** The product explicitly supports scheduled/future rides; then enforce one active immediate ride while allowing separately scheduled requests.
