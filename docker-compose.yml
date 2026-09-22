@@ -19,8 +19,8 @@ services:
     build: ./apps/api
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/dhaka_tesla_pool?schema=public
-      JWT_SECRET: local-docker-demo-secret-change-before-public-deployment
-      CORS_ORIGIN: http://localhost:3000
+      JWT_SECRET: ${JWT_SECRET:-local-docker-demo-secret-change-before-public-deployment}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       PORT: 4000
       NODE_ENV: production
     ports:
