@@ -6,6 +6,7 @@ import { prisma } from "./lib/prisma.js";
 import authRoutes from "./routes/auth.routes.js";
 import metaRoutes from "./routes/meta.routes.js";
 import rideRoutes from "./routes/rides.routes.js";
+import driverRoutes from "./routes/driver.routes.js";
 import { errorHandler, notFound } from "./middleware/errors.js";
 
 export const app = express();
@@ -29,5 +30,6 @@ app.get("/health", async (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/meta", metaRoutes);
 app.use("/api/rides", rideRoutes);
+app.use("/api/driver", driverRoutes);
 app.use(notFound);
 app.use(errorHandler);
