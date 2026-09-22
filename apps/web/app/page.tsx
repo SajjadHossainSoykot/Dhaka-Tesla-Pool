@@ -12,7 +12,7 @@ export default function HomePage() {
         </p>
         <div className="hero-actions">
           <Link className="button button-primary" href="/login">Open demo</Link>
-          <a className="button button-secondary" href="https://github.com/" target="_blank" rel="noreferrer">
+          <a className="button button-secondary" href="https://github.com/SajjadHossainSoykot/Dhaka-Tesla-Pool" target="_blank" rel="noreferrer">
             Repository
           </a>
         </div>
