@@ -63,22 +63,12 @@ export async function joinPoolAtomically(input: {
       throw new AppError(409, "Pool is no longer accepting passengers", "POOL_CLOSED");
     }
 
-    if (
-      !areRoutesCompatible(
-        pool.pickupZone as Zone,
-        rideRequest.destinationZone as Zone,
-        rideRequest.pickupZone as Zone,
-        rideRequest.destinationZone as Zone,
-      )
-    ) {
-      // The first destination is not stored on Pool; routeCorridor below is the authoritative coarse check.
-      const requestCorridor = routeCorridor(
-        rideRequest.pickupZone as Zone,
-        rideRequest.destinationZone as Zone,
-      );
-      if (requestCorridor !== pool.routeCorridor) {
-        throw new AppError(409, "Ride route is not compatible with this pool", "ROUTE_NOT_COMPATIBLE");
-      }
+    const requestCorridor = routeCorridor(
+      rideRequest.pickupZone as Zone,
+      rideRequest.destinationZone as Zone,
+    );
+    if (requestCorridor !== pool.routeCorridor) {
+      throw new AppError(409, "Ride route is not compatible with this pool", "ROUTE_NOT_COMPATIBLE");
     }
 
     const reservation = await tx.pool.updateMany({

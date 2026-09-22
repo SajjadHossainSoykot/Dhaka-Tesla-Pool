@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dhaka_tesla_pool
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dhaka_tesla_pool"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./apps/api
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/dhaka_tesla_pool?schema=public
+      JWT_SECRET: local-docker-demo-secret-change-before-public-deployment
+      CORS_ORIGIN: http://localhost:3000
+      PORT: 4000
+      NODE_ENV: production
+    ports:
+      - "4000:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 8s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 8s
+      timeout: 5s
+      retries: 10
+
+  test-db:
+    image: postgres:16-alpine
+    profiles: ["test"]
+    environment:
+      POSTGRES_DB: dhaka_tesla_pool_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dhaka_tesla_pool_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  api-test:
+    build: ./apps/api
+    profiles: ["test"]
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@test-db:5432/dhaka_tesla_pool_test?schema=public
+      JWT_SECRET: test-secret-that-is-long-enough-for-validation-12345
+      CORS_ORIGIN: http://localhost:3000
+      PORT: 4000
+      NODE_ENV: test
+    depends_on:
+      test-db:
+        condition: service_healthy
+    command: ["sh", "-c", "npm run db:deploy && npm test"]
+
+volumes:
+  postgres_data:
