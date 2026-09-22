@@ -11,8 +11,8 @@ const FareSchema = z.object({
   seats: z.coerce.number().int().min(1).max(3).default(1),
   pooled: z
     .enum(["true", "false"])
-    .transform((value) => value === "true")
-    .default("false"),
+    .default("false")
+    .transform((value) => value === "true"),
 });
 
 router.get("/zones", (_req, res) => {
