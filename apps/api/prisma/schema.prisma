@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  PASSENGER
+  DRIVER
+}
+
+enum RideStatus {
+  REQUESTED
+  MATCHED
+  DRIVER_ARRIVED
+  STARTED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  TESLAPAY
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String
+  email         String        @unique
+  passwordHash  String
+  role          Role
+  vehicle       Vehicle?
+  rideRequests  RideRequest[] @relation("PassengerRideRequests")
+  poolMembers   PoolMember[]  @relation("PassengerPoolMembers")
+  rideActions   RideStatusHistory[] @relation("RideStatusActor")
+  poolActions   PoolStatusHistory[] @relation("PoolStatusActor")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Vehicle {
+  id        String   @id @default(cuid())
+  name      String
+  plateLabel String  @unique
+  capacity  Int      @default(3)
+  isOnline  Boolean  @default(false)
+  driverId  String   @unique
+  driver    User     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  pools     Pool[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RideRequest {
+  id                 String        @id @default(cuid())
+  passengerId        String
+  passenger          User          @relation("PassengerRideRequests", fields: [passengerId], references: [id], onDelete: Cascade)
+  pickupZone         String
+  destinationZone    String
+  seats              Int
+  status             RideStatus    @default(REQUESTED)
+  soloFarePoysha     Int
+  finalFarePoysha    Int
+  paymentMethod      PaymentMethod @default(CASH)
+  poolMember         PoolMember?
+  statusHistory      RideStatusHistory[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([passengerId, createdAt])
+  @@index([status, pickupZone])
+}
+
+model Pool {
+  id               String      @id @default(cuid())
+  vehicleId        String
+  vehicle          Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  pickupZone       String
+  routeCorridor    String
+  status           RideStatus  @default(REQUESTED)
+  capacitySnapshot Int
+  reservedSeats    Int         @default(0)
+  members          PoolMember[]
+  statusHistory    PoolStatusHistory[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([vehicleId, status])
+  @@index([pickupZone, routeCorridor, status])
+}
+
+model PoolMember {
+  id            String      @id @default(cuid())
+  poolId        String
+  pool          Pool        @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  rideRequestId String      @unique
+  rideRequest   RideRequest @relation(fields: [rideRequestId], references: [id], onDelete: Cascade)
+  passengerId   String
+  passenger     User        @relation("PassengerPoolMembers", fields: [passengerId], references: [id], onDelete: Cascade)
+  seats         Int
+  farePoysha    Int
+  joinedAt      DateTime    @default(now())
+
+  @@index([poolId, joinedAt])
+  @@index([passengerId, joinedAt])
+}
+
+model RideStatusHistory {
+  id            String      @id @default(cuid())
+  rideRequestId String
+  rideRequest   RideRequest @relation(fields: [rideRequestId], references: [id], onDelete: Cascade)
+  fromStatus    RideStatus?
+  toStatus      RideStatus
+  actorUserId   String?
+  actor         User?       @relation("RideStatusActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  note          String?
+  createdAt     DateTime    @default(now())
+
+  @@index([rideRequestId, createdAt])
+}
+
+model PoolStatusHistory {
+  id          String      @id @default(cuid())
+  poolId      String
+  pool        Pool        @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  fromStatus  RideStatus?
+  toStatus    RideStatus
+  actorUserId String?
+  actor       User?       @relation("PoolStatusActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  note        String?
+  createdAt   DateTime    @default(now())
+
+  @@index([poolId, createdAt])
+}
