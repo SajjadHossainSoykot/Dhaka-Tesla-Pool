@@ -1,5 +1,19 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
+
+dotenv.config();
+if (!process.env.DATABASE_URL) {
+  const rootEnv = resolve(fileURLToPath(new URL("../../../../../.env", import.meta.url)));
+  const workspaceEnv = resolve(process.cwd(), "../../.env");
+  if (existsSync(workspaceEnv)) {
+    dotenv.config({ path: workspaceEnv });
+  } else if (existsSync(rootEnv)) {
+    dotenv.config({ path: rootEnv });
+  }
+}
 
 const EnvSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
