@@ -6,7 +6,7 @@
 - [ ] Confirm no `.env`, API key, database password, or token is committed.
 - [ ] Generate/commit package lockfiles after dependency installation for tighter reproducibility.
 - [ ] Capture 2-4 real screenshots/GIFs and add them under `docs/screenshots/`; embed them in README.
-- [ ] Push all long-lived and feature branches, not only `master`.
+- [ ] Push all long-lived and feature branches, not only `main`.
 - [ ] Deploy frontend/API/database using free tiers.
 - [ ] Replace README placeholders for Repository / Live Demo / Video.
 - [ ] Test demo accounts on the deployed environment.

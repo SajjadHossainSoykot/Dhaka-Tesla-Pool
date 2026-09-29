@@ -29,7 +29,7 @@
 | ERD | `docs/ERD.md` |
 | Technology justifications | `docs/DECISIONS.md`, README stack table |
 | Meaningful tests | unit + integration suites including race condition |
-| Git workflow | master + feature branches + pre-release + release/v1.0.0 |
+| Git workflow | main + feature branches + pre-release + release/v1.0.0 |
 | Conventional commit format | actual repository history |
 | AI usage disclosure | README AI Usage section |
 | 6-minute video plan | `docs/VIDEO_SCRIPT.md` |

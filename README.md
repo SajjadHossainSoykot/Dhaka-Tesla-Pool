@@ -261,7 +261,7 @@ See [`docs/API.md`](docs/API.md). The API is REST because the MVP has a small, c
 The repository intentionally preserves the engineering path:
 
 ```text
-master
+main
   ├─ feature/architecture-data-model
   ├─ feature/passenger-auth
   ├─ feature/tesla-pooling
