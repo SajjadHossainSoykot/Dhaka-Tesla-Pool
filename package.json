@@ -2,14 +2,26 @@
   "name": "dhaka-tesla-pool",
   "private": true,
   "version": "1.0.0",
-  "workspaces": ["apps/api", "apps/web"],
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
   "scripts": {
+    "dev": "node scripts/ensure-db.mjs && concurrently -n api,web -c blue,magenta \"npm run dev:api\" \"npm run dev:web\"",
     "dev:api": "npm run dev --workspace @dhaka-tesla-pool/api",
     "dev:web": "npm run dev --workspace @dhaka-tesla-pool/web",
     "build": "npm run build --workspaces --if-present",
-    "test": "npm run test --workspace @dhaka-tesla-pool/api"
+    "test": "npm run test --workspace @dhaka-tesla-pool/api",
+    "db:up": "docker compose up db -d",
+    "db:down": "docker compose stop db",
+    "db:deploy": "npm run db:deploy --workspace @dhaka-tesla-pool/api",
+    "db:seed": "npm run db:seed --workspace @dhaka-tesla-pool/api",
+    "db:generate": "npm run db:generate --workspace @dhaka-tesla-pool/api"
   },
   "engines": {
     "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
   }
 }
