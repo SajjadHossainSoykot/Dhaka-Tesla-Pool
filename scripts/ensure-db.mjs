@@ -42,7 +42,17 @@ async function main() {
       for (let i = 0; i < 30; i++) {
         await new Promise((r) => setTimeout(r, 1000));
         if (await isPortOpen("127.0.0.1", 5432)) {
-          console.log("✅ PostgreSQL is ready on localhost:5432!\n");
+          console.log("✅ PostgreSQL is ready on localhost:5432!");
+          try {
+            console.log("🔄 Ensuring database schema and seeds are applied...");
+            execSync("npm run db:deploy --workspace @dhaka-tesla-pool/api && npm run db:seed --workspace @dhaka-tesla-pool/api", {
+              stdio: "inherit",
+              env: process.env,
+            });
+            console.log("✅ Database schema and seeds ready!\n");
+          } catch {
+            // Non-fatal if already deployed or during shutdown
+          }
           return;
         }
       }

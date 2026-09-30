@@ -23,8 +23,23 @@ app.use(
 app.use(express.json({ limit: "100kb" }));
 
 app.get("/health", async (_req, res) => {
-  await prisma.$queryRaw`SELECT 1`;
-  res.json({ status: "ok", service: "dhaka-tesla-pool-api" });
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({
+      status: "ok",
+      service: "dhaka-tesla-pool-api",
+      database: "connected",
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(503).json({
+      status: "degraded",
+      service: "dhaka-tesla-pool-api",
+      database: "disconnected",
+      error: err instanceof Error ? err.message : "Database unavailable",
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
 app.use("/api/auth", authRoutes);
