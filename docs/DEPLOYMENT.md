@@ -1,6 +1,6 @@
 # Free-tier Deployment Guide
 
-Recommended internship-demo layout:
+Recommended free-tier deployment layout:
 
 - **Frontend:** Vercel Hobby, root directory `apps/web`
 - **API:** Render Free Web Service, root directory `apps/api` (or use the included `render.yaml`)
