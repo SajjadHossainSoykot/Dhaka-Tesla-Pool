@@ -56,7 +56,7 @@
 
 **Switch later when:** Matching spans shards/regions or reservations need expirations, at which point an idempotent reservation workflow and stronger coordination strategy may be needed.
 
-## ADR-007: Short-lived JWT bearer token for the internship demo
+## ADR-007: Short-lived JWT bearer token for the MVP demo
 
 **Pick:** 2-hour signed JWT returned after login; the web client keeps it in `sessionStorage`, not persistent storage.
 

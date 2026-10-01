@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Dhaka Tesla Pool",
-  description: "Ride-pooling MVP for the RoBenDevs software engineering internship challenge",
+  description: "Production-minded ride-pooling platform for Dhaka rush-hour traffic management",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

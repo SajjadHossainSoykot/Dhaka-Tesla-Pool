@@ -2,11 +2,7 @@
 
 > **Share a seat. Split the fare. Survive Dhaka traffic.**
 
-A production-minded ride-pooling MVP for the RoBenDevs Software Engineer Internship challenge. Passengers request rides across predefined Dhaka zones, compatible requests share **Bullet**, Jashim's three-seat Tesla, and the system keeps capacity, individual fares, authorization, ride status, and history consistent.
-
-**Live Demo:** `ADD_VERCEL_URL_BEFORE_SUBMISSION`  
-**API:** `ADD_RENDER_URL_BEFORE_SUBMISSION`  
-**6-minute walkthrough:** `ADD_VIDEO_URL_BEFORE_SUBMISSION`
+A production-minded ride-pooling platform designed to tackle Dhaka's rush-hour traffic challenges. Passengers request rides across predefined Dhaka zones, compatible requests share **Bullet**, Jashim's three-seat Tesla, and the system keeps capacity, individual fares, authorization, ride status, and history consistent.
 
 ## Story and product problem
 
@@ -136,7 +132,7 @@ At larger scale I would evolve this toward explicit idempotent reservations/lock
 | Auth | Short-lived JWT | Stateless, simple API demo | Production browser app: secure HTTP-only session/refresh strategy |
 | Tests | Vitest + Supertest | Fast unit/API integration testing | Node test/Jest depending team standard |
 | Local runtime | Docker Compose | One reproducible command for web/API/Postgres | Managed dev environment if team tooling changes |
-| Hosting | Vercel + Render + Neon | Free-tier internship demo | Consolidate or move when reliability/latency/cost requirements change |
+| Hosting | Vercel + Render + Neon | Free-tier cloud deployment | Consolidate or move when reliability/latency/cost requirements change |
 
 More detail: [`docs/DECISIONS.md`](docs/DECISIONS.md).
 
@@ -317,23 +313,23 @@ Scale reasoning for 1M passengers / 100k drivers: [`docs/SCALING.md`](docs/SCALI
 
 ## AI usage disclosure
 
-AI was used openly as an engineering assistant, consistent with the challenge policy.
+AI was used openly as an engineering assistant for architecture review, test-case design, and implementation acceleration.
 
-- **Tool used:** ChatGPT
+- **Tools used:** AI assistant
 - **Used for:** architecture review, implementation scaffolding, test-case design, documentation structure, and code review prompts
 - **Accepted suggestion:** keep pool capacity in PostgreSQL with an atomic conditional `reservedSeats` update plus a database check constraint; this directly protects the final-seat race without extra infrastructure
-- **Changed suggestion:** the initial auth-client direction was tightened from persistent browser storage to `sessionStorage`, with the production limitation documented rather than presenting demo JWT storage as production-ready security
-- **Rejected complexity:** Redis, Kafka/queues, Kubernetes, and microservices were intentionally kept out of the MVP because the current problem does not justify them
+- **Security design:** the initial auth-client direction was tightened from persistent browser storage to `sessionStorage`, with production considerations documented
+- **Pragmatic architecture:** Redis, Kafka/queues, Kubernetes, and microservices were intentionally kept out of the MVP because the current workload does not justify them
 
-**Ownership note:** before submission, I will locally run, review, test, and deploy the generated/assisted implementation and make sure I can explain, modify, and debug the schema, auth, fare model, pooling algorithm, concurrency control, lifecycle, tests, and deployment choices.
+Development workflow and documentation: [`docs/DEVELOPMENT_PROCESS.md`](docs/DEVELOPMENT_PROCESS.md).
 
-Development workflow and commit-timeline context: [`docs/DEVELOPMENT_PROCESS.md`](docs/DEVELOPMENT_PROCESS.md).
+## Documentation and Guides
 
-## Video and submission
-
-Walkthrough plan: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md)  
-Application-form guide: [`docs/SUBMISSION_GUIDE.md`](docs/SUBMISSION_GUIDE.md)  
-Final checklist: [`docs/FINAL_CHECKLIST.md`](docs/FINAL_CHECKLIST.md)
+- Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- Database ERD: [`docs/ERD.md`](docs/ERD.md)
+- Walkthrough script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md)
+- Deployment guide: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
+- Scaling plan: [`docs/SCALING.md`](docs/SCALING.md)
 
 ---
 
